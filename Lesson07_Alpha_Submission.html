@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 07 — Building an Alpha · Hour House · Principia Orthogona</title>
+<meta name="description" content="Hour House ESL Lesson 07 — Building and Submitting an Alpha on WorldQuant Brain. Step-by-step walkthrough: write a formula, simulate, read results, submit. Newark, NJ · 2026.">
+<link rel="stylesheet" href="hourhouse-shared.css">
+<style>
+  .pipeline-row {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 0.8rem; margin: 1.2rem 0;
+  }
+  @media(max-width:640px){ .pipeline-row{ grid-template-columns: 1fr 1fr; } }
+  .op-box {
+    padding: 1rem 0.8rem; text-align: center; color: white; position: relative;
+  }
+  .op-box .op-letter { font-size: 2rem; font-weight: bold; font-family: monospace; display: block; margin-bottom: 0.3rem; }
+  .op-box .op-name { font-family: sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.85; }
+  .op-box .op-alpha { font-size: 0.78rem; margin-top: 0.5rem; font-style: italic; opacity: 0.9; line-height: 1.4; }
+  .op-C { background: #1a2744; }
+  .op-K { background: #8a4a00; }
+  .op-F { background: #2d5a27; }
+  .op-U { background: #1a6b5a; }
+  .arrow-right { display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1.5rem; }
+  .sim-output-box {
+    background: #0d1117; color: #e6edf3; font-family: monospace;
+    padding: 1.2rem 1.5rem; margin: 0.8rem 0 1.2rem;
+    border: 1px solid #30363d; border-radius: 2px; font-size: 0.85rem; line-height: 1.8;
+  }
+  .sim-output-box .ok  { color: #3fb950; }
+  .sim-output-box .warn{ color: #d29922; }
+  .sim-output-box .err { color: #f85149; }
+  .sim-output-box .lbl { color: #79c0ff; }
+  .step-number { display: inline-flex; align-items: center; justify-content: center;
+    width: 2rem; height: 2rem; background: var(--teal); color: white;
+    font-family: sans-serif; font-size: 0.85rem; font-weight: bold; border-radius: 50%;
+    margin-right: 0.6rem; flex-shrink: 0; }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 1.4rem; }
+  .step-content { flex: 1; }
+  .step-content h4 { color: var(--navy); font-size: 1rem; margin-bottom: 0.4rem; }
+  .step-content p { font-size: 0.9rem; line-height: 1.65; color: #444; }
+  .step-content code { background: #eef2f8; padding: 0.1rem 0.35rem; font-family: monospace; font-size: 0.85rem; color: var(--mid); }
+  .alpha-box {
+    background: #f4ead5; border: 1.5px solid #c9a37a;
+    padding: 1.2rem 1.5rem; margin: 1rem 0;
+    font-family: monospace; font-size: 0.92rem; line-height: 1.9;
+    color: #3b2a1a;
+  }
+  .alpha-box .comment { color: #7a5a3a; font-style: italic; }
+  .metric-pass { color: #2d5a27; font-weight: bold; }
+  .metric-fail { color: #8a2a2a; font-weight: bold; }
+  .threshold-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.88rem; }
+  .threshold-table th { background: var(--navy); color: var(--gold); padding: 0.45rem 0.8rem; text-align: left; font-family: sans-serif; font-size: 0.73rem; }
+  .threshold-table td { padding: 0.45rem 0.8rem; border-bottom: 1px solid var(--light); }
+  .threshold-table td:first-child { font-weight: bold; color: var(--mid); }
+  .threshold-table .pass td:nth-child(3) { color: var(--green); font-weight: bold; }
+  .threshold-table .fail td:nth-child(3) { color: #c00; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">&larr; PRINCIPIA ORTHOGONA</a>
+  <ul class="nav-links">
+    <li><a href="../../portal.html">Student Portal</a></li>
+    <li><a href="index.html" style="color:var(--gold)">Lessons</a></li>
+    <li><a href="Lesson06_WorldQuant_Top10.html">&larr; Lesson 06: USA Top 10</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Hour House &middot; Newark, NJ &middot; Adult ESL &middot; Lesson 07</div>
+  <h1>Building and Submitting an Alpha</h1>
+  <div class="hero-sub">From Idea to WorldQuant Brain &mdash; Step by Step</div>
+  <div class="gold-rule"></div>
+  <p class="hero-desc">In Lesson 06 you read the IQC leaderboard and saw that the USA is in 9th place. In this lesson you will learn exactly how to help: write a mathematical formula, test it in the WorldQuant Brain simulator, read the results, and submit your first alpha. Every passing alpha you submit adds to the USA aggregate score.</p>
+</div>
+
+<div class="lesson-body" id="lesson-07">
+
+  <div class="lesson-header">
+    <div class="level-tag">Lesson 07 &middot; Level B1&ndash;B2+ &middot; 90&ndash;110 minutes</div>
+    <h2>Building and Submitting an Alpha<br>
+    <span style="font-size:1rem;font-weight:normal;color:#666;">platform.worldquantbrain.com/simulate &mdash; Step-by-Step Walkthrough</span></h2>
+    <div class="lesson-source">
+      Platform: <a href="https://platform.worldquantbrain.com/simulate" target="_blank" style="color:var(--mid);">platform.worldquantbrain.com/simulate</a>
+      &nbsp;&middot;&nbsp; Companion: Lesson 06 (USA Top 10, IQC 2026)
+    </div>
+  </div>
+
+  <!-- The TO/TOGT connection -->
+  <div class="marginalia-banner" style="border-color:#1a6b5a;">
+    <strong style="color:var(--teal);">The operators you already know.</strong>
+    The TO/TOGT pipeline G&nbsp;=&nbsp;U&nbsp;&#8728;&nbsp;F&nbsp;&#8728;&nbsp;K&nbsp;&#8728;&nbsp;C works the same way in quant finance.
+    You have been learning the language of operators since Lesson 01.
+    This lesson shows you where they live in the real world &mdash; on a trading platform used by 100,000+ researchers.
+  </div>
+
+  <!-- Operator pipeline as alpha steps -->
+  <div class="pipeline-row">
+    <div class="op-box op-C">
+      <span class="op-letter">C</span>
+      <span class="op-name">Compress</span>
+      <span class="op-alpha">Choose your <strong>universe</strong> — which stocks to look at (TOP3000US, etc.)</span>
+    </div>
+    <div class="op-box op-K">
+      <span class="op-letter">K</span>
+      <span class="op-name">Curvature</span>
+      <span class="op-alpha">Apply a <strong>mathematical operator</strong> to price/volume data (rank, ts_rank, delta…)</span>
+    </div>
+    <div class="op-box op-F">
+      <span class="op-letter">F</span>
+      <span class="op-name">Fold</span>
+      <span class="op-alpha">The <strong>backtester</strong> evaluates your formula — Sharpe, fitness, turnover</span>
+    </div>
+    <div class="op-box op-U">
+      <span class="op-letter">U</span>
+      <span class="op-name">Unfold</span>
+      <span class="op-alpha"><strong>Submit</strong> — your alpha enters the live pool and scores for your country</span>
+    </div>
+  </div>
+
+  <!-- Basics table -->
+  <table class="basics-table">
+    <tr><th colspan="2">Lesson Basics</th></tr>
+    <tr><td>Topic</td><td>Quant Finance &middot; Platform Walkthrough &middot; Academic English &middot; TO/TOGT</td></tr>
+    <tr><td>Objective</td><td>Complete the full alpha pipeline: write &rarr; simulate &rarr; read results &rarr; submit. Connect the TO/TOGT operators to real financial data.</td></tr>
+    <tr><td>Level</td><td>B1&ndash;B2+ (all students; no finance experience required)</td></tr>
+    <tr><td>Duration</td><td>90&ndash;110 minutes</td></tr>
+    <tr><td>Skills</td><td>Reading technical text &middot; Vocabulary &middot; Following instructions &middot; Interpreting data &middot; Writing</td></tr>
+    <tr><td>Grammar</td><td>Imperative mood (instructions) &middot; Conditional: <em>if the Sharpe ratio is &gt; 1.0, then…</em> &middot; Passive: <em>the formula is evaluated by…</em></td></tr>
+    <tr><td>Key Vocabulary</td><td>alpha, backtest, Sharpe ratio, fitness, turnover, universe, neutralization, decay, operator, simulate, submit</td></tr>
+    <tr><td>Platform</td><td><a href="https://platform.worldquantbrain.com/simulate" target="_blank" style="color:var(--mid);">platform.worldquantbrain.com/simulate</a> &mdash; free account required</td></tr>
+  </table>
+
+  <!-- QR row -->
+  <div class="qr-row">
+    <div class="qr-box">
+      <div class="qr-label">&#x1F4BB; Open the Simulator</div>
+      <div class="qr-url">platform.worldquantbrain.com/simulate</div>
+      <div class="qr-caption">Log in or create a free account first</div>
+    </div>
+    <div class="qr-box">
+      <div class="qr-label">&#x1F4CA; IQC Leaderboard</div>
+      <div class="qr-url">platform.worldquantbrain.com &rarr; Competitions &rarr; IQC 2026</div>
+      <div class="qr-caption">See how your submissions help the USA score</div>
+    </div>
+  </div>
+
+  <!-- STAGE 1 -->
+  <div class="stage-block">
+    <div class="stage-header">&#x2705; STAGE 1 &mdash; WARM-UP &nbsp;&middot;&nbsp; 10 minutes</div>
+    <div class="stage-activity">What is an alpha? (Discussion)</div>
+    <p class="body-p">Before looking at the platform, discuss in pairs:</p>
+    <ol class="lesson-list">
+      <li data-n="1">Have you ever predicted something before it happened? How did you do it?</li>
+      <li data-n="2">What information do you think a computer could use to predict whether a stock price will go up or down?</li>
+      <li data-n="3">You already know Operator K (curvature/intensification). How do you think &ldquo;applying an operator to price data&rdquo; might work?</li>
+    </ol>
+    <div class="lesson-quote">&ldquo;An alpha is not a trade. It is a <strong>signal</strong> &mdash; a mathematical formula that ranks stocks from most likely to go up to most likely to go down. You are not buying or selling anything. You are predicting order.&rdquo;</div>
+  </div>
+
+  <!-- STAGE 2 — Vocabulary -->
+  <div class="stage-block">
+    <div class="stage-header">&#x2705; STAGE 2 &mdash; VOCABULARY &nbsp;&middot;&nbsp; 15 minutes</div>
+    <div class="stage-activity">11 Key Terms &mdash; Copy into your notebook</div>
+    <table class="vocab-table">
+      <tr><th>Term</th><th>Meaning in plain English</th></tr>
+      <tr><td>alpha</td><td>a mathematical formula that predicts how stocks will be ranked by future return</td></tr>
+      <tr><td>universe</td><td>the pool of stocks your formula looks at (e.g. the top 3,000 US stocks)</td></tr>
+      <tr><td>simulate / backtest</td><td>to test your formula on <em>historical</em> data to see how it would have performed in the past</td></tr>
+      <tr><td>Sharpe ratio</td><td>a measure of how good your returns are <em>relative to risk</em>; higher = better. Must be &gt; 1.0 to pass.</td></tr>
+      <tr><td>fitness</td><td>WorldQuant&rsquo;s combined quality score for your alpha. Must be &gt; 1.0 to submit.</td></tr>
+      <tr><td>turnover</td><td>how often your formula changes which stocks it holds. Very high turnover = expensive in real life.</td></tr>
+      <tr><td>operator</td><td>a mathematical function you apply to data (rank, ts_rank, delta, log, abs&hellip;). Same word as in TO/TOGT.</td></tr>
+      <tr><td>neutralization</td><td>removing a &ldquo;market tilt&rdquo; so your alpha is not just betting that all stocks go up together</td></tr>
+      <tr><td>decay</td><td>how quickly your formula&rsquo;s signal fades. A decay of 4 means the signal is half as strong after 4 days.</td></tr>
+      <tr><td>submit</td><td>to send your passing alpha to WorldQuant&rsquo;s live pool, where it contributes to the IQC country score</td></tr>
+      <tr><td>aggregate score</td><td>the total of all submitted alphas from one country (you saw this in Lesson 06)</td></tr>
+    </table>
+  </div>
+
+  <!-- STAGE 3 — Platform walkthrough -->
+  <div class="stage-block">
+    <div class="stage-header">&#x2705; STAGE 3 &mdash; PLATFORM WALKTHROUGH &nbsp;&middot;&nbsp; 30 minutes</div>
+    <div class="stage-activity">Step-by-Step: From Opening the Simulator to Submitting</div>
+
+    <div class="step-row">
+      <span class="step-number">1</span>
+      <div class="step-content">
+        <h4>Open the simulator</h4>
+        <p>Go to <a href="https://platform.worldquantbrain.com/simulate" target="_blank" style="color:var(--mid);">platform.worldquantbrain.com/simulate</a>. Log in or create a free account. You will see a code editor on the left and settings on the right.</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-number">2</span>
+      <div class="step-content">
+        <h4>Choose your settings (Operator C &mdash; Compress)</h4>
+        <p>In the right panel, set:</p>
+        <ul class="lesson-list" style="margin-top:0.4rem;">
+          <li data-n="&bull;">Region: <code>USA</code></li>
+          <li data-n="&bull;">Universe: <code>TOP3000</code> (the 3,000 most liquid US stocks)</li>
+          <li data-n="&bull;">Neutralization: <code>Market</code></li>
+          <li data-n="&bull;">Decay: <code>4</code></li>
+          <li data-n="&bull;">Delay: <code>1</code></li>
+          <li data-n="&bull;">Truncation: <code>0.08</code></li>
+        </ul>
+        <p style="margin-top:0.5rem;">These settings define <em>which</em> stocks you are looking at and <em>how</em> your signal will be used. This is the Compress step: you are choosing your universe.</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-number">3</span>
+      <div class="step-content">
+        <h4>Write your alpha formula (Operator K &mdash; Curvature)</h4>
+        <p>In the code editor, type your formula. Here is a simple starter alpha to use in class:</p>
+        <div class="alpha-box">
+          <span class="comment"># Starter Alpha 1: Rank by recent volume change</span><br>
+          rank(ts_delta(volume, 5))
+        </div>
+        <p>What this does: <code>ts_delta(volume, 5)</code> calculates how much a stock&rsquo;s trading volume has changed over the last 5 days. <code>rank()</code> converts that into a ranking from 0 to 1 across all stocks. Stocks with <em>increasing</em> volume rank higher.</p>
+        <div class="alpha-box">
+          <span class="comment"># Starter Alpha 2: Rank by momentum (recent price trend)</span><br>
+          rank(ts_mean(returns, 10))
+        </div>
+        <p>What this does: <code>returns</code> is daily price change. <code>ts_mean(..., 10)</code> takes the 10-day average. <code>rank()</code> ranks all stocks by their recent trend. This is a simple <strong>momentum</strong> alpha.</p>
+        <div class="alpha-box">
+          <span class="comment"># Starter Alpha 3: Contrarian (operators K and F together)</span><br>
+          -rank(ts_mean(close/open - 1, 5))
+        </div>
+        <p>The minus sign flips the signal: stocks that have been <em>overperforming</em> recently get a <em>low</em> rank. This bets on reversal (a common pattern in short-term trading).</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-number">4</span>
+      <div class="step-content">
+        <h4>Run the simulation (Operator F &mdash; Fold)</h4>
+        <p>Click <strong>Simulate</strong>. The backtester will run your formula on historical data from the last several years. This takes 30&ndash;90 seconds. You will see a performance chart and a table of metrics.</p>
+        <p style="margin-top:0.4rem;">This is the Fold step: the system is evaluating your formula. It will &ldquo;fold&rdquo; your idea against reality and show you what would have happened.</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-number">5</span>
+      <div class="step-content">
+        <h4>Read the output (did it pass?)</h4>
+        <p>A typical simulator output looks like this:</p>
+        <div class="sim-output-box">
+<span class="lbl">Simulation complete.</span><br>
+<span class="lbl">Sharpe ratio:     </span><span class="ok">1.42</span>    &larr; Good. Must be &gt; 1.0<br>
+<span class="lbl">Fitness:          </span><span class="ok">1.18</span>    &larr; Good. Must be &gt; 1.0<br>
+<span class="lbl">Turnover:         </span><span class="warn">0.71</span>    &larr; Acceptable (0.0&ndash;0.9)<br>
+<span class="lbl">Returns:          </span><span class="ok">+0.082</span>  &larr; 8.2% annualized<br>
+<span class="lbl">Drawdown:         </span><span class="warn">-0.14</span>   &larr; Largest loss<br>
+<span class="lbl">Status:           </span><span class="ok">PASS &mdash; ready to submit</span>
+        </div>
+        <p>If fitness or Sharpe is below 1.0, the alpha fails. Try a different formula or settings and simulate again.</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-number">6</span>
+      <div class="step-content">
+        <h4>Submit (Operator U &mdash; Unfold)</h4>
+        <p>If the alpha passes, click <strong>Submit</strong>. Your alpha enters the WorldQuant live pool. Within 24&ndash;48 hours, it will appear in your portfolio. <strong>Every accepted alpha you submit adds to the USA aggregate score in the IQC.</strong></p>
+        <p style="margin-top:0.5rem;">This is the Unfold step: your compressed, curved, folded idea now stabilises in the real world and generates a live signal.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 4 — Reading the metrics -->
+  <div class="stage-block">
+    <div class="stage-header">&#x2705; STAGE 4 &mdash; UNDERSTANDING THE METRICS &nbsp;&middot;&nbsp; 15 minutes</div>
+    <div class="stage-activity">Pass / Fail Thresholds &mdash; What the Numbers Mean</div>
+
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-name">Sharpe Ratio</div>
+        <div class="metric-val">&gt; 1.0</div>
+        <div class="metric-desc">Return &divide; risk. How much profit per unit of volatility. A good alpha earns more than it risks.</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-name">Fitness</div>
+        <div class="metric-val">&gt; 1.0</div>
+        <div class="metric-desc">WorldQuant&rsquo;s combined quality score. Includes Sharpe, uniqueness, and other factors.</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-name">Turnover</div>
+        <div class="metric-val">0.0&ndash;0.9</div>
+        <div class="metric-desc">How often you change positions. Very high turnover is too costly in real trading.</div>
+      </div>
+    </div>
+
+    <table class="threshold-table">
+      <tr><th>Metric</th><th>Meaning</th><th>Pass threshold</th><th>What to do if it fails</th></tr>
+      <tr class="pass"><td>Sharpe ratio</td><td>Return per unit of risk</td><td class="metric-pass">&gt; 1.0</td><td>Try a longer lookback window or different operator</td></tr>
+      <tr class="pass"><td>Fitness</td><td>WorldQuant combined score</td><td class="metric-pass">&gt; 1.0</td><td>Improve Sharpe; try different neutralization (Market, Subindustry)</td></tr>
+      <tr><td>Turnover</td><td>How often positions change</td><td>0.01&ndash;0.9</td><td>Increase decay (e.g. 4 &rarr; 6); use longer ts windows</td></tr>
+      <tr><td>Returns</td><td>Annualized profit</td><td>&gt; 0</td><td>Flip the sign of your formula (add minus)</td></tr>
+    </table>
+
+    <div class="lesson-quote">&ldquo;The simulator is the Fold operator. It takes your idea and evaluates it against reality. If it passes, you submit &mdash; and that is the Unfold. Your idea becomes a live signal.&rdquo;</div>
+  </div>
+
+  <!-- STAGE 5 — Practice -->
+  <div class="stage-block">
+    <div class="stage-header">&#x2705; STAGE 5 &mdash; PRACTICE &nbsp;&middot;&nbsp; 15 minutes</div>
+    <div class="stage-activity">In pairs &mdash; try each alpha, record your results</div>
+    <p class="body-p">Use the table below. For each starter alpha, simulate it and write down the Sharpe ratio and fitness. Then discuss: did it pass? Why or why not?</p>
+    <table class="vocab-table">
+      <tr><th>Alpha</th><th>Formula</th><th>Sharpe</th><th>Fitness</th><th>Pass?</th></tr>
+      <tr><td>Starter 1</td><td><code>rank(ts_delta(volume, 5))</code></td><td></td><td></td><td></td></tr>
+      <tr><td>Starter 2</td><td><code>rank(ts_mean(returns, 10))</code></td><td></td><td></td><td></td></tr>
+      <tr><td>Starter 3</td><td><code>-rank(ts_mean(close/open - 1, 5))</code></td><td></td><td></td><td></td></tr>
+      <tr><td>Your idea</td><td><em>write your own here</em></td><td></td><td></td><td></td></tr>
+    </table>
+    <p class="body-p"><b>Grammar note:</b> Use conditional sentences to describe your results:
+    &ldquo;If the Sharpe ratio <em>is</em> greater than 1.0, the alpha <em>passes</em>.&rdquo;
+    &ldquo;If I <em>had used</em> a longer window, the fitness <em>might have been</em> higher.&rdquo;</p>
+  </div>
+
+  <!-- STAGE 6 — Discussion -->
+  <div class="stage-block">
+    <div class="stage-header">&#x2705; STAGE 6 &mdash; DISCUSSION &nbsp;&middot;&nbsp; 10 minutes</div>
+    <div class="cards-grid">
+      <div class="disc-card">
+        <div class="disc-card-title">Card A &mdash; G = U &#8728; F &#8728; K &#8728; C in Finance</div>
+        <p>We have used these operators since Lesson 01. In the Cajueiro lesson, C was &ldquo;compression toward a stable form.&rdquo; In the alpha simulation, C is &ldquo;choose your universe.&rdquo;</p>
+        <p class="disc-question">Is this the same idea or a different one? What does it mean to say that the same mathematical structure appears in biology, physics, language learning, and finance?</p>
+      </div>
+      <div class="disc-card">
+        <div class="disc-card-title">Card B &mdash; The USA Leaderboard</div>
+        <p>In Lesson 06, the USA had 2,331 participants and an aggregate score of 674,966 &mdash; 9th place. China had 24,454 participants and a score of 53,568,436 &mdash; 1st place.</p>
+        <p class="disc-question">What would happen to the USA score if every student in this classroom submitted one passing alpha today? Do the math together. What does this tell you about the power of collective action?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 7 — Writing -->
+  <div class="stage-block">
+    <div class="stage-header">&#x2705; STAGE 7 &mdash; WRITING TASK &nbsp;&middot;&nbsp; 15 minutes</div>
+    <div class="stage-activity">Exit Paragraph &mdash; Choose One</div>
+    <p class="body-p"><b>Option A &mdash; Instructions:</b> Write a set of instructions for a classmate who was absent today. Explain, step by step, how to open the simulator, enter a formula, read the results, and submit. Use the imperative mood: <em>&ldquo;Open the simulator. Click on…&rdquo;</em> Use at least 6 vocabulary words from Stage 2.</p>
+    <p class="body-p"><b>Option B &mdash; Reflection:</b> You have now completed the full G = U &#8728; F &#8728; K &#8728; C pipeline in a real financial application. Write a paragraph connecting this to something from an earlier lesson in the series (Cajueiro, Vitruvian, Galileo, Chladni, Number 33). What is the common thread?</p>
+    <p class="body-p"><b>Option C &mdash; The Hard Question:</b> Does it bother you that the same mathematical operators that appear in contact geometry, cellular biology, and stellar physics also appear in a platform that predicts stock prices? Should mathematics be &ldquo;above&rdquo; finance, or does this connection make the mathematics more real? Write your honest answer.</p>
+  </div>
+
+  <!-- Timing -->
+  <h3 style="color:var(--navy); font-family:sans-serif; font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.6rem;">&#x23F1; Timing Summary</h3>
+  <table class="timing-table">
+    <tr><th>#</th><th>Activity</th><th>Time</th></tr>
+    <tr><td>1</td><td>Warm-Up: What is an alpha?</td><td>10 min</td></tr>
+    <tr><td>2</td><td>Vocabulary (11 terms)</td><td>15 min</td></tr>
+    <tr><td>3</td><td>Platform Walkthrough (6 steps)</td><td>30 min</td></tr>
+    <tr><td>4</td><td>Understanding the Metrics</td><td>15 min</td></tr>
+    <tr><td>5</td><td>Practice: Simulate 3 Starter Alphas</td><td>15 min</td></tr>
+    <tr><td>6</td><td>Discussion Cards</td><td>10 min</td></tr>
+    <tr><td>7</td><td>Writing Task</td><td>15 min</td></tr>
+    <tr><td></td><td><strong>TOTAL</strong></td><td><strong>110 min</strong></td></tr>
+  </table>
+
+  <div class="teacher-note">
+    <strong>Teacher Notes &mdash;</strong>
+    Students do <em>not</em> need finance experience. Frame this entirely as &ldquo;applying mathematical operators to data&rdquo; &mdash; which is exactly what they have been doing in TO/TOGT since Lesson 01.
+    <br><br>
+    <strong>Accounts:</strong> WorldQuant Brain accounts are free. Create yours in advance and walk through the simulator with students projected on screen. For students who cannot create accounts, the walkthrough as a demonstration still covers all learning objectives.
+    <br><br>
+    <strong>Starter alphas:</strong> All three starter formulas are simple enough to type in 30 seconds. Starter 1 (volume momentum) and Starter 3 (contrarian) tend to perform best in recent years. Results vary by simulation date &mdash; show students that the machine tells them honestly when it fails.
+    <br><br>
+    <strong>IQC connection:</strong> At the start of Stage 6, look up the current USA position on the live leaderboard together. If any student submits a passing alpha during class, refresh the leaderboard at the end to see if the score has moved.
+    <br><br>
+    <strong>For stronger students:</strong> Explore the <em>Operators</em> library on the platform (rank, ts_rank, ts_corr, group_rank, adv20&hellip;). Ask: which of these corresponds to C? Which to K? Which to F?
+  </div>
+
+  <div class="fundraiser">
+    <h3>Support Hour House &mdash; Newark, NJ</h3>
+    <p>Hour House is an adult English language learning programme at 229 Ballantine Pkwy, Newark, NJ 07104.<br>
+    Help us keep the doors open for immigrant and refugee learners in our community.</p>
+    <p>
+      <a href="https://g6llc.gumroad.com" target="_blank" style="display:inline-block;margin:0.3rem 0.4rem;">&#x1F4D6; Buy the Membership &mdash; g6llc.gumroad.com</a><br>
+      <a href="https://www.ebay.com/str/principiaorthogona" target="_blank" style="display:inline-block;margin:0.3rem 0.4rem;">&#x1F6D2; Buy the Book &mdash; Principia Orthogona on eBay</a>
+    </p>
+  </div>
+
+  <div class="copyright-strip">
+    &copy; 2026 Pablo Nogueira Grossi / Hour House &middot; 229 Ballantine Pkwy, Newark, NJ 07104 &middot;
+    WorldQuant Brain: <a href="https://platform.worldquantbrain.com" target="_blank">platform.worldquantbrain.com</a> &middot; CC BY-NC-ND 4.0 &middot;
+    Lesson designed using the CAELA Framework for Effective Lesson Planning for Adult English Language Learners
+  </div>
+
+</div>
+
+<footer>
+  <div>&copy; 2026 Pablo Nogueira Grossi / G6 LLC &middot; Newark NJ &middot; ORCID 0009-0000-6496-2186</div>
+  <div style="margin-top:0.4rem;">Principia Orthogona &middot; AXLE v6.1 &middot; <a href="https://github.com/TOTOGT/AXLE">github.com/TOTOGT/AXLE</a></div>
+</footer>
+
+</body>
+</html>
