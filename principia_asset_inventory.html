@@ -1,0 +1,180 @@
+
+<style>
+.inv { font-family: var(--font-sans); padding: 1rem 0; }
+.section { margin-bottom: 1.8rem; }
+.section-head { font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border-tertiary); padding-bottom: 6px; margin-bottom: 10px; }
+.row { display: grid; grid-template-columns: 220px 1fr 90px; gap: 8px 12px; align-items: start; padding: 6px 0; border-bottom: 1px solid var(--color-border-tertiary); font-size: 13px; }
+.row:last-child { border-bottom: none; }
+.fname { font-family: var(--font-mono); font-size: 11.5px; color: var(--color-text-primary); word-break: break-all; }
+.desc { color: var(--color-text-secondary); line-height: 1.45; }
+.tag { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 10px; text-align: center; white-space: nowrap; }
+.tag-ok   { background: var(--color-background-success); color: var(--color-text-success); }
+.tag-warn { background: var(--color-background-warning); color: var(--color-text-warning); }
+.tag-info { background: var(--color-background-info);    color: var(--color-text-info); }
+.tag-gap  { background: var(--color-background-danger);  color: var(--color-text-danger); }
+.note { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+h2 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.sub { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 1.2rem; }
+</style>
+<div class="inv">
+<h2>Principia Orthogona — complete asset inventory</h2>
+<div class="sub">Every file you have, what it is, what state it's in</div>
+
+<div class="section">
+<div class="section-head">PDFs — books and documents</div>
+
+<div class="row">
+  <div><div class="fname">Binder2.pdf</div><div class="note">379 pp · Adobe Acrobat · created today</div></div>
+  <div class="desc"><strong>The big combined book</strong> — Books 1+2+3 merged into one volume. Contains the full Principia (Vols I–III), AXLE chapter, GTCT, Cosmology (Ch19), Polylaminin/Brazil (Ch20), and much more. This is likely the IngramSpark-ready master. Has the correct ISBNs: print 979-8-9954416-0-1 / eBook 979-8-9954416-1-8. Created this morning in Adobe.</div>
+  <div><span class="tag tag-ok">Master PDF</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">IMPA_Edition_Hardback.pdf</div><div class="note">528 pp · G6 LLC · pypdf</div></div>
+  <div class="desc"><strong>Volume V — G⁵ · Complete Completeness / The Seed.</strong> ISBN print 979-8-9954416-4-9 / eBook 979-8-9954416-5-6. This is the largest single volume. Separate from the Binder2 combined edition.</div>
+  <div><span class="tag tag-ok">Vol V PDF</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">1775975111514_Book3_VolIII_MiniBeast_eBook.pdf</div><div class="note">179 pp · XeLaTeX · newest</div></div>
+  <div class="desc"><strong>Book 3 latest eBook</strong> — The current living document. Has: Intro, Bio instantiations, Plasma/Market/Neural, Ch E (GTCT for Everyone, bilingual), Ch F (Saturn hexagon), Ch G (Kālabhairava), Ch H (Collatz). Missing from PDF: Ch T (Tubulin), Ch W (Wigner) — those are live on the website only.</div>
+  <div><span class="tag tag-warn">Living doc</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">Book3_VolIII_MiniBeast_eBook-combined_copy-combined_copy.pdf</div><div class="note">39 pp · earliest version</div></div>
+  <div class="desc"><strong>Old Book 3</strong> — The original 39-page version. Same file as the 1775975048210_ prefixed copy. Superseded by the 179-page version above. Keep as archive only.</div>
+  <div><span class="tag tag-info">Archive</span></div>
+</div>
+
+</div>
+
+<div class="section">
+<div class="section-head">LaTeX source files — books</div>
+
+<div class="row">
+  <div><div class="fname">completePrincipia.tex</div><div class="note">5,149 lines · 199KB</div></div>
+  <div class="desc"><strong>Book 1 source — Vols I–III</strong>. Compiles to 164 pp (lualatex). This is what we used for the IngramSpark build. Has the 979-8 ISBNs. The IngramSpark PDF we produced from this is your submission file.</div>
+  <div><span class="tag tag-ok">Book 1 src</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">master_book_corrected-2.tex</div><div class="note">3,968 lines · 153KB</div></div>
+  <div class="desc"><strong>Earlier Book 1 variant</strong> — Same series, same ISBNs, slightly shorter. Probably an earlier draft of completePrincipia.tex. Compare before discarding.</div>
+  <div><span class="tag tag-info">Book 1 v2</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">main-2.tex</div><div class="note">2,867 lines · 193KB</div></div>
+  <div class="desc"><strong>Book 2 source</strong> — "Topographical Orthogonal Generative Theory: Applications, Verification, and Foundations of All Domains." Has AXLE chapter (8 things that broke), G6 crystal, regeneration hierarchy. No compiled PDF yet.</div>
+  <div><span class="tag tag-warn">Needs compile</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">1775972049351_GTCT_2026_001_corrected.tex</div><div class="note">611 lines · 28KB</div></div>
+  <div class="desc"><strong>GTCT working paper</strong> — "The Generative Time Circuit Theorem." Standalone article, the seed for Volume IV. Has g-series taxonomy, Theorem T1, Gronwall, falsifiability, exercises, references including Navrátil 2026.</div>
+  <div><span class="tag tag-ok">Vol IV seed</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">main-3.tex</div><div class="note">128 lines · stub</div></div>
+  <div class="desc"><strong>"Monster 👹" — scratch file</strong>. Two conflicting documentclass declarations. Not usable as-is.</div>
+  <div><span class="tag tag-gap">Discard</span></div>
+</div>
+
+</div>
+
+<div class="section">
+<div class="section-head">Lean 4 formal verification — AXLE</div>
+
+<div class="row">
+  <div><div class="fname">Main.lean / Main_v5.lean</div><div class="note">362 lines · identical</div></div>
+  <div class="desc"><strong>Zero sorry, zero axioms</strong> — The canonical ordinal/club filter base. All of closurePoints_stationary, regeneration hierarchy, Mahlo. This is the ground truth that everything else builds on.</div>
+  <div><span class="tag tag-ok">Zero sorry ✓</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">Main_v6.lean / Main_V6.txt</div><div class="note">794 lines · identical</div></div>
+  <div class="desc"><strong>Full AXLE v6.1</strong> — Adds GTCT structures, Gronwall (sorry closed in v7), separation theorem, dm³ invariants. 8 remaining sorrys, all labelled. This is the most complete single file.</div>
+  <div><span class="tag tag-warn">8 sorrys</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">Main_v8_2.lean</div><div class="note">305 lines</div></div>
+  <div class="desc"><strong>GQM/PhaseVector layer</strong> — Adds Tribonacci η, PhaseVector, hexagonalEigenmode, crystal saturation, Collatz orbit. 6 labelled admits (A1–A3 closeable now, B–C matrix gap, D open problem).</div>
+  <div><span class="tag tag-warn">6 sorrys</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">Main_v2 / v3 / v3_corrected / v4</div><div class="note">history</div></div>
+  <div class="desc"><strong>Version history</strong> — Shows the evolution from sorry-laden to progressively cleaner. v3_corrected is zero sorry on the ℕ hierarchy. v4 has 1 honest sorry (club filter). Keep as audit trail.</div>
+  <div><span class="tag tag-info">History</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">main_v7.lean</div><div class="note">303 lines</div></div>
+  <div class="desc"><strong>AXLE v7</strong> — Gronwall sorry closed. 3 remaining: crystal lattice, symmetry, unconditional Mahlo. The version we produced as AXLE_v7.lean output.</div>
+  <div><span class="tag tag-ok">Gronwall ✓</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">Finite.lean</div><div class="note">129 lines · zero sorry</div></div>
+  <div class="desc"><strong>Kakeya finite-directions proof</strong> — Complete, zero sorry. Uses addHaar_affineSubspace. Live in DM3-lab repo.</div>
+  <div><span class="tag tag-ok">Zero sorry ✓</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">Gronwall.lean</div><div class="note">62 lines</div></div>
+  <div class="desc"><strong>Standalone Gronwall proof</strong> — Closes the decay exponent sorry. linarith + positivity. Import into any file that needs it.</div>
+  <div><span class="tag tag-ok">Proof ✓</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">G6.lean / D6.lean / MahloClosure.lean</div><div class="note">modules</div></div>
+  <div class="desc"><strong>Crystal, Symmetry, Ordinal modules</strong> — live in DM3-lab as lean/Crystal/, lean/Symmetry/, lean/Ordinal/. Each has 1–3 sorrys blocked by Mathlib matrix API. Building blocks for the full modular structure.</div>
+  <div><span class="tag tag-warn">API blocked</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">separation_theorem.lean / gtct_t1.lean / regeneration_loop_invariant.lean / gronwall_contraction_below_stability_radius.lean</div></div>
+  <div class="desc"><strong>Standalone proof modules</strong> — Each closes or partially closes one sorry from v6. Designed to be imported. Gronwall is complete; the others have 1 remaining sorry each.</div>
+  <div><span class="tag tag-info">Modules</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">AXLE.lean / AXLE8.lean</div><div class="note">duplicates</div></div>
+  <div class="desc"><strong>Earlier AXLE versions</strong> — Superseded by main_v7.lean. AXLE.lean = v8.1, AXLE8.lean = v8.1 again (different capitalisation). Both have 5–6 sorrys. Use main_v7 instead.</div>
+  <div><span class="tag tag-info">Superseded</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">Criticality_Principle.lean / dm3_Criticality_gtct.lean / dm³Criticality.lean / fitribonacci.lean</div></div>
+  <div class="desc"><strong>GTCT/NS domain files</strong> — Criticality principle (c*=3), dm³ Criticality (depends on GTCT imports), discrete ladder (tribonacci/tetranacci), Collatz descent arithmetic. Most sorrys are closeable or honestly open.</div>
+  <div><span class="tag tag-warn">Mixed</span></div>
+</div>
+
+</div>
+
+<div class="section">
+<div class="section-head">Other files</div>
+
+<div class="row">
+  <div><div class="fname">coherence_bridge_v8_3.yaml</div><div class="note">YAML</div></div>
+  <div class="desc"><strong>Coherence bridge lexicon</strong> — Maps human claims to Lean entities. Used by validate_bridge.py in DM3-lab. The machine-readable sorry ledger.</div>
+  <div><span class="tag tag-ok">Key file</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">spectral-radius.html</div><div class="note">919 lines</div></div>
+  <div class="desc"><strong>Interactive spectral radius widget</strong> — Book 3 Collatz supplement. Navy/gold design. Canvas chart, slider controls for M, k_max, λ. The design template we matched for the fractal diagrams.</div>
+  <div><span class="tag tag-ok">Web tool</span></div>
+</div>
+
+<div class="row">
+  <div><div class="fname">1finite.lean</div><div class="note">107 lines</div></div>
+  <div class="desc"><strong>Earlier Kakeya draft</strong> — Has sorrys that Finite.lean already closes. Superseded. Keep as diff reference.</div>
+  <div><span class="tag tag-info">Superseded</span></div>
+</div>
+
+</div>
+</div>

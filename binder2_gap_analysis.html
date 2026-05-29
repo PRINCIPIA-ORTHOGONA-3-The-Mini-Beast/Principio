@@ -1,0 +1,130 @@
+
+<style>
+.wrap { font-family: var(--font-sans); padding: 1rem 0; }
+h2 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.sub { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 1.4rem; }
+.books { display: flex; gap: 12px; margin-bottom: 1.6rem; flex-wrap: wrap; }
+.book { flex: 1; min-width: 180px; border: 1px solid var(--color-border-secondary); border-radius: 8px; overflow: hidden; }
+.book-head { padding: 10px 14px 8px; font-size: 11px; font-weight: 500; }
+.book-head .title { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+.book-head .pages { font-size: 11px; opacity: .7; }
+.bh-b2  { background: var(--color-background-warning); }
+.bh-v5  { background: var(--color-background-info); }
+.bh-b3  { background: var(--color-background-success); }
+.seg { padding: 6px 14px; font-size: 11px; border-top: 1px solid var(--color-border-tertiary); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.seg .pp { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-tertiary); white-space: nowrap; }
+.ok   { color: var(--color-text-success); }
+.gap  { color: var(--color-text-danger); }
+.old  { color: var(--color-text-warning); }
+.section { margin-bottom: 1.4rem; }
+.section-head { font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border-tertiary); padding-bottom: 5px; margin-bottom: 10px; }
+.step { display: grid; grid-template-columns: 28px 1fr; gap: 0 10px; margin-bottom: 10px; align-items: start; }
+.num { width: 24px; height: 24px; border-radius: 50%; background: var(--color-background-info); color: var(--color-text-info); font-size: 11px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-body { font-size: 12px; color: var(--color-text-primary); line-height: 1.5; }
+.step-body .action { font-weight: 500; }
+.step-body .note { color: var(--color-text-secondary); font-size: 11px; margin-top: 2px; }
+.total { background: var(--color-background-secondary); border: 1px solid var(--color-border-secondary); border-radius: 8px; padding: 12px 16px; font-size: 12px; margin-top: 1rem; }
+.total strong { font-size: 14px; }
+.warn-box { background: var(--color-background-warning); border: 1px solid var(--color-border-secondary); border-radius: 6px; padding: 10px 14px; font-size: 12px; color: var(--color-text-warning); margin-bottom: 1.2rem; }
+</style>
+<div class="wrap">
+<h2>Binder2 gap analysis — what's in each PDF and what's missing</h2>
+<div class="sub">Three PDFs · three different assembly states · one target: the complete series</div>
+
+<div class="warn-box">
+  Vol V (528 pp) is completely absent from Binder2. Book 3 in Binder2 is the old 39-page version, missing 4 major new chapters. Binder2 is roughly 40% of the complete series.
+</div>
+
+<div class="books">
+
+  <div class="book">
+    <div class="book-head bh-b2">
+      <div class="title">Binder2.pdf</div>
+      <div class="pages">379 pages · your current combined · created today in Adobe</div>
+    </div>
+    <div class="seg"><span>Cover + ISBNs (Book 1)</span><span class="pp ok">p1–4 ✓</span></div>
+    <div class="seg"><span class="old">Book 3 — old 39-page version</span><span class="pp old">p5–108 ⚠</span></div>
+    <div class="seg"><span>Book 2 — TOGT (all 24 chapters)</span><span class="pp ok">p109–231 ✓</span></div>
+    <div class="seg"><span>Book 1 — Vols I–III + GCM</span><span class="pp ok">p232–360 ✓</span></div>
+    <div class="seg"><span>Manifesto + GTCT paper + back</span><span class="pp ok">p361–379 ✓</span></div>
+    <div class="seg"><span class="gap">Vol V — The Seed</span><span class="pp gap">MISSING</span></div>
+    <div class="seg"><span class="gap">Book 3 Ch E, F, G, H (new)</span><span class="pp gap">MISSING</span></div>
+    <div class="seg"><span class="gap">Book 3 Ch T, W (web only)</span><span class="pp gap">MISSING</span></div>
+  </div>
+
+  <div class="book">
+    <div class="book-head bh-v5">
+      <div class="title">IMPA_Edition_Hardback.pdf</div>
+      <div class="pages">528 pages · Vol V · G⁵ Complete Completeness</div>
+    </div>
+    <div class="seg"><span>Vol V title + foreword</span><span class="pp ok">p1–20 ✓</span></div>
+    <div class="seg"><span>Book 3 complete (Ch E,F,G,H)</span><span class="pp ok">p21–200 ✓</span></div>
+    <div class="seg"><span>Book 2 — TOGT</span><span class="pp ok">p201–320 ✓</span></div>
+    <div class="seg"><span>Book 1 — Vols I–III</span><span class="pp ok">p321–450 ✓</span></div>
+    <div class="seg"><span>GTCT + GCM + appendices</span><span class="pp ok">p451–528 ✓</span></div>
+    <div class="seg"><span class="gap">Book 3 Ch T, W (web only)</span><span class="pp gap">Not yet</span></div>
+  </div>
+
+  <div class="book">
+    <div class="book-head bh-b3">
+      <div class="title">Book3_MiniBeast_latest.pdf</div>
+      <div class="pages">179 pages · living document · newest</div>
+    </div>
+    <div class="seg"><span>Intro + Bio (Ch 1–2)</span><span class="pp ok">p1–22 ✓</span></div>
+    <div class="seg"><span>Plasma / Market / Neural (Ch 3–5)</span><span class="pp ok">p23–40 ✓</span></div>
+    <div class="seg"><span>Ch E — GTCT for Everyone</span><span class="pp ok">p41–90 ✓</span></div>
+    <div class="seg"><span>Ch F — Saturn hexagon</span><span class="pp ok">p91–110 ✓</span></div>
+    <div class="seg"><span>Ch G — Kālabhairava</span><span class="pp ok">p111–158 ✓</span></div>
+    <div class="seg"><span>Ch H — Collatz</span><span class="pp ok">p159–179 ✓</span></div>
+    <div class="seg"><span class="gap">Ch T — Tubulin</span><span class="pp gap">Web only</span></div>
+    <div class="seg"><span class="gap">Ch W — Wigner</span><span class="pp gap">Web only</span></div>
+  </div>
+
+</div>
+
+<div class="section">
+<div class="section-head">What to do in Adobe — 4 steps</div>
+
+<div class="step">
+  <div class="num">1</div>
+  <div class="step-body">
+    <div class="action">Replace old Book 3 (p5–108) with the new 179-page Book 3</div>
+    <div class="note">Delete pages 5–108 from Binder2. Insert the full 1775975111514_Book3_VolIII_MiniBeast_eBook.pdf there instead. This adds Ch E, F, G, H and is the correct living version.</div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="num">2</div>
+  <div class="step-body">
+    <div class="action">Insert Vol V (IMPA_Edition_Hardback.pdf) after Book 3</div>
+    <div class="note">528 pages. Vol V is the biggest volume and completely absent from Binder2. Insert after Book 3, before Book 2 — or at the end before the Manifesto. Your call on series order.</div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="num">3</div>
+  <div class="step-body">
+    <div class="action">Fix metadata before final save</div>
+    <div class="note">Current Binder2 shows Title: "untitled", Author: "anonymous". In Adobe: File → Properties → Description. Set Title and Author correctly before IngramSpark upload.</div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="num">4</div>
+  <div class="step-body">
+    <div class="action">Add Ch T (Tubulin) and Ch W (Wigner) when ready</div>
+    <div class="note">These exist as HTML only. Once the formal constructions are complete, convert to PDF and insert into Book 3. This is the next writing task.</div>
+  </div>
+</div>
+
+</div>
+
+<div class="total">
+  <strong>Target page count after steps 1–2:</strong> ~947 pages<br>
+  <span style="color:var(--color-text-secondary);font-size:11px">
+    Binder2 379 − old Book3 104 = 275 remaining · + Book3 new 179 · + Vol V 528 = <strong>982 pages</strong><br>
+    (+ Ch T ~30pp + Ch W ~25pp when ready = ~1,037 pages complete series)
+  </span>
+</div>
+
+</div>

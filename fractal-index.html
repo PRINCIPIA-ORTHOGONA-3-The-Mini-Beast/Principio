@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dm³ Generative Attractor — Principia Orthogona</title>
+<style>
+:root {
+  --navy:  #1a2744;
+  --gold:  #c9a84c;
+  --cream: #faf7f0;
+  --smoke: #f0ece4;
+  --mid:   #3a4f7a;
+  --text:  #1c1c1c;
+  --glow:  rgba(201,168,76,0.18);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--navy);
+  font-family: 'Georgia', serif;
+  color: var(--cream);
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.title-block {
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
+}
+.eyebrow {
+  font-family: sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.main-title {
+  font-size: clamp(1.1rem, 2.5vw, 1.7rem);
+  color: var(--cream);
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+.subtitle {
+  font-size: 0.82rem;
+  color: rgba(201,168,76,0.75);
+  font-style: italic;
+}
+.gold-rule {
+  width: 50px; height: 1px;
+  background: var(--gold);
+  margin: 8px auto 0;
+  opacity: 0.6;
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.legend {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: rgba(250,247,240,0.7);
+}
+.legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.operator-label {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0.8;
+}
+</style>
+</head>
+<body>
+
+<div class="title-block">
+  <div class="eyebrow">Principia Orthogona · Book 3 · The Mini-Beast</div>
+  <div class="main-title">The dm³ Generative Attractor</div>
+  <div class="subtitle">Seven domains. One operator. G = U ∘ F ∘ K ∘ C</div>
+  <div class="gold-rule"></div>
+</div>
+
+<canvas id="c"></canvas>
+
+<div class="operator-label">C &nbsp;→&nbsp; K &nbsp;→&nbsp; F &nbsp;→&nbsp; U &nbsp;→&nbsp; ∞</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#e8a838"></div>HPA stress</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#58a6ff"></div>Neural oscillations</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#56d364"></div>Circadian clock</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff6b9d"></div>Immune adaptation</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#bc8fff"></div>Plasma reconnection</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ffa657"></div>Market volatility</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#79e5dd"></div>Wigner crystal ★</div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+const DOMAINS = [
+  { name: 'HPA stress',         color: '#e8a838', mu: -0.38, omega: 0.21, beta: 1.9 },
+  { name: 'Neural',             color: '#58a6ff', mu: -0.55, omega: 0.45, beta: 2.1 },
+  { name: 'Circadian',          color: '#56d364', mu: -0.29, omega: 0.073, beta: 1.6 },
+  { name: 'Immune',             color: '#ff6b9d', mu: -0.44, omega: 0.18, beta: 2.0 },
+  { name: 'Plasma',             color: '#bc8fff', mu: -0.42, omega: 0.015, beta: 1.8 },
+  { name: 'Market',             color: '#ffa657', mu: -0.67, omega: 0.28, beta: 2.4 },
+  { name: 'Wigner',             color: '#79e5dd', mu: -0.31, omega: 0.19, beta: 1.7 },
+];
+
+let W, H, cx, cy, t = 0, frame = 0;
+const trails = DOMAINS.map(() => []);
+const MAX_TRAIL = 420;
+
+function resize() {
+  W = canvas.width  = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+  cx = W / 2;
+  cy = H / 2;
+}
+
+// dm³ contact normal form orbit in 2D projection
+// rho(t) converges to 1 (limit cycle), theta advances at omega
+// z accumulates — we project to (rho*cos(theta+phase), rho*sin(theta+phase)*zscale)
+function orbitPoint(d, t, seed) {
+  const phase = seed * 2.3;
+  const z = d.beta * t * 0.01;
+  const rho = 1 + 0.35 * Math.exp(d.mu * t * 0.8) * Math.cos(t * 2.1 + seed);
+  const theta = d.omega * t + phase;
+  const zfactor = 0.6 + 0.4 * Math.exp(-d.beta * t * 0.004);
+  return {
+    x: rho * Math.cos(theta),
+    y: rho * Math.sin(theta) * zfactor,
+  };
+}
+
+// Fractal attractor: iterate a 2D map with dm³ parameters
+// Inspired by Rössler / contact normal form in 2D
+function fractalPoint(d, t, idx) {
+  const seed = idx * 1.618 + 0.5;
+  const pt = orbitPoint(d, t, seed);
+  // Add small perturbation that decays with mu
+  const eps = 0.08 * Math.exp(d.mu * t * 0.15);
+  const noise_x = eps * Math.sin(t * 3.7 + seed * 5.1);
+  const noise_y = eps * Math.cos(t * 2.3 + seed * 3.7);
+  return { x: pt.x + noise_x, y: pt.y + noise_y };
+}
+
+function worldToScreen(x, y, idx) {
+  const scale = Math.min(W, H) * 0.28;
+  // Each domain orbits a different satellite center
+  const angle = (idx / DOMAINS.length) * Math.PI * 2;
+  const orbit_r = Math.min(W, H) * 0.23;
+  const ox = cx + orbit_r * Math.cos(angle + t * 0.003);
+  const oy = cy + orbit_r * Math.sin(angle + t * 0.003) * 0.45;
+  return {
+    sx: ox + x * scale * 0.38,
+    sy: oy + y * scale * 0.38,
+  };
+}
+
+function renderFrame() {
+  frame++;
+  t += 0.5;
+
+  // Fading background for trail effect
+  ctx.fillStyle = 'rgba(26,39,68,0.12)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Central attractor — fractal cross-pattern
+  const centerScale = Math.min(W, H) * 0.12;
+  const phases = 33; // g33
+  for (let p = 0; p < phases; p++) {
+    const a = (p / phases) * Math.PI * 2 + t * 0.008;
+    const r = centerScale * (0.4 + 0.6 * Math.abs(Math.sin(p * 0.31 + t * 0.02)));
+    const x = cx + r * Math.cos(a);
+    const y = cy + r * Math.sin(a) * 0.55;
+    const alpha = 0.15 + 0.25 * Math.abs(Math.sin(p * 0.7 + t * 0.04));
+    ctx.beginPath();
+    ctx.arc(x, y, 1.2, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(201,168,76,${alpha})`;
+    ctx.fill();
+  }
+
+  // Gold central ring pulse
+  const pulseR = centerScale * (0.85 + 0.15 * Math.sin(t * 0.06));
+  ctx.beginPath();
+  ctx.arc(cx, cy, pulseR, 0, Math.PI * 2);
+  ctx.strokeStyle = `rgba(201,168,76,${0.12 + 0.08 * Math.sin(t * 0.1)})`;
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Spoke lines from center to each domain
+  DOMAINS.forEach((d, idx) => {
+    const angle = (idx / DOMAINS.length) * Math.PI * 2 + t * 0.003;
+    const orbit_r = Math.min(W, H) * 0.23;
+    const ox = cx + orbit_r * Math.cos(angle);
+    const oy = cy + orbit_r * Math.sin(angle) * 0.45;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(ox, oy);
+    ctx.strokeStyle = `rgba(201,168,76,0.04)`;
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  });
+
+  // Domain orbits + trails
+  DOMAINS.forEach((d, idx) => {
+    const pt = fractalPoint(d, t, idx);
+    const { sx, sy } = worldToScreen(pt.x, pt.y, idx);
+
+    trails[idx].push({ x: sx, y: sy, age: 0 });
+    if (trails[idx].length > MAX_TRAIL) trails[idx].shift();
+
+    // Draw trail
+    if (trails[idx].length > 2) {
+      ctx.beginPath();
+      trails[idx].forEach((tp, ti) => {
+        const alpha = (ti / trails[idx].length) * 0.55;
+        if (ti === 0) {
+          ctx.moveTo(tp.x, tp.y);
+        } else {
+          ctx.lineTo(tp.x, tp.y);
+        }
+      });
+      const hex = d.color;
+      ctx.strokeStyle = hex + '66';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+    }
+
+    // Draw current point
+    ctx.beginPath();
+    ctx.arc(sx, sy, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = d.color;
+    ctx.fill();
+
+    // Glow
+    ctx.beginPath();
+    ctx.arc(sx, sy, 6, 0, Math.PI * 2);
+    ctx.fillStyle = d.color + '22';
+    ctx.fill();
+  });
+
+  // Crystallization fold indicator — hexagonal pattern at center
+  if (frame % 3 === 0) {
+    const hex_r = centerScale * 0.5;
+    for (let v = 0; v < 6; v++) {
+      const a1 = (v / 6) * Math.PI * 2 + t * 0.015;
+      const a2 = ((v + 1) / 6) * Math.PI * 2 + t * 0.015;
+      const x1 = cx + hex_r * Math.cos(a1);
+      const y1 = cy + hex_r * Math.sin(a1) * 0.55;
+      const x2 = cx + hex_r * Math.cos(a2);
+      const y2 = cy + hex_r * Math.sin(a2) * 0.55;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.strokeStyle = `rgba(121,229,221,${0.08 + 0.07 * Math.sin(t * 0.05 + v)})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+    }
+  }
+
+  // G6 label at centre
+  ctx.fillStyle = `rgba(201,168,76,${0.4 + 0.2 * Math.sin(t * 0.08)})`;
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('g₃₃', cx, cy);
+
+  requestAnimationFrame(renderFrame);
+}
+
+resize();
+window.addEventListener('resize', () => { resize(); trails.forEach(a => a.length = 0); });
+renderFrame();
+</script>
+</body>
+</html>
